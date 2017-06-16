@@ -22,6 +22,8 @@ from keras.layers import Convolution2D
 from keras.layers import MaxPooling2D
 from keras.layers import Flatten
 from keras.layers import Dense
+from keras.layers import Dropout
+
 
 # Initialising the CNN
 classifier = Sequential()
@@ -36,11 +38,17 @@ classifier.add(MaxPooling2D(pool_size = (2, 2)))
 classifier.add(Convolution2D(32, (3, 3), activation = 'relu'))
 classifier.add(MaxPooling2D(pool_size = (2, 2)))
 
+# Adding a 3rd Convolutional layer 
+classifier.add(Convolution2D(32, (3, 3), activation = 'relu'))
+classifier.add(MaxPooling2D(pool_size = (2, 2)))
+
 # Step 3 - Flattening
 classifier.add(Flatten())
 
 # Step 4 - Full Connection
 classifier.add(Dense(units = 128, activation = 'relu')) #hidden layer
+classifier.add(Dropout(p = 0.1)) #Dropout
+
 classifier.add(Dense(units = 1, activation = 'sigmoid')) # output layer
 
 # Compiling the CNN
@@ -73,11 +81,12 @@ classifier.fit_generator(training_set,
                          validation_data=test_set,
                          validation_steps=2000)
 
+
 # Part 3 - Making new Predictions 
 
 import numpy as np
 from keras.preprocessing import image
-test_image = image.load_img('dataset/single_prediction/cat_or_dog_1.jpg',
+test_image = image.load_img('dataset/single_prediction/cat_or_dog_2.jpg',
                             target_size=(64, 64))
 test_image = image.img_to_array(test_image)
 test_image = np.expand_dims(test_image,axis = 0)
